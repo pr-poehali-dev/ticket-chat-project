@@ -61,7 +61,7 @@ const Index = () => {
     { id: '6', event: 'Концерт: Сергей Лазарев', date: '30 ноября 2025', venue: 'ВТБ Арена', price: 4200, category: 'music', available: 200 },
     { id: '7', event: 'Стендап: Александр Незлобин', date: '1 декабря 2025', venue: 'Известия Hall', price: 2200, category: 'comedy', available: 150 },
     { id: '8', event: 'Стендап: Юлия Ахмедова', date: '5 декабря 2025', venue: 'Театр Эстрады', price: 1800, category: 'comedy', available: 95 },
-    { id: '9', event: 'Стендап: Данила Поперечный', date: '10 декабря 2025', venue: 'Крокус Сити Холл', price: 3000, category: 'comedy', available: 120 },
+    { id: '9', event: 'Стендап: Данила Поперечный', date: '03 ноября 2025', venue: 'Крокус Сити Холл', price: 3000, category: 'comedy', available: 120 },
   ];
 
   const categories = [
