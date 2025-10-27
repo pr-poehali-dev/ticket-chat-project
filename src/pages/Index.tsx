@@ -44,6 +44,13 @@ const Index = () => {
   const [returnDialogOpen, setReturnDialogOpen] = useState(false);
   const [returnOrderId, setReturnOrderId] = useState('');
   const [returnReason, setReturnReason] = useState('');
+  const [checkoutDialogOpen, setCheckoutDialogOpen] = useState(false);
+  const [orderForm, setOrderForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    paymentMethod: 'card'
+  });
 
   const tickets: Ticket[] = [
     { id: '1', event: 'Концерт: Би-2', date: '15 ноября 2025', venue: 'Олимпийский', price: 3500, category: 'music', available: 120 },
@@ -189,7 +196,7 @@ const Index = () => {
                       <span>Итого:</span>
                       <span>{getTotalPrice()} ₽</span>
                     </div>
-                    <Button className="w-full" size="lg">
+                    <Button className="w-full" size="lg" onClick={() => setCheckoutDialogOpen(true)}>
                       Оформить заказ
                       <Icon name="ArrowRight" size={18} className="ml-2" />
                     </Button>
@@ -332,6 +339,155 @@ const Index = () => {
           </div>
         </div>
       )}
+
+      <Dialog open={checkoutDialogOpen} onOpenChange={setCheckoutDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Оформление заказа</DialogTitle>
+            <DialogDescription>
+              Заполните данные для получения билетов
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            <div className="space-y-4">
+              <h3 className="font-semibold flex items-center gap-2">
+                <Icon name="ShoppingBag" size={20} />
+                Ваш заказ
+              </h3>
+              <div className="space-y-3">
+                {cart.map(item => (
+                  <div key={item.id} className="flex justify-between items-start p-3 bg-muted rounded-lg">
+                    <div className="flex-1">
+                      <p className="font-medium">{item.event}</p>
+                      <p className="text-sm text-muted-foreground">{item.date} • {item.venue}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{item.price * item.quantity} ₽</p>
+                      <p className="text-sm text-muted-foreground">× {item.quantity}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-between items-center pt-3 border-t text-lg font-bold">
+                <span>Итого:</span>
+                <span className="text-primary">{getTotalPrice()} ₽</span>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-semibold flex items-center gap-2">
+                <Icon name="User" size={20} />
+                Контактные данные
+              </h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="name">ФИО *</Label>
+                <Input 
+                  id="name" 
+                  placeholder="Иванов Иван Иванович"
+                  value={orderForm.name}
+                  onChange={(e) => setOrderForm({...orderForm, name: e.target.value})}
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email *</Label>
+                  <Input 
+                    id="email" 
+                    type="email"
+                    placeholder="example@mail.ru"
+                    value={orderForm.email}
+                    onChange={(e) => setOrderForm({...orderForm, email: e.target.value})}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Телефон *</Label>
+                  <Input 
+                    id="phone" 
+                    placeholder="+7 (999) 123-45-67"
+                    value={orderForm.phone}
+                    onChange={(e) => setOrderForm({...orderForm, phone: e.target.value})}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-semibold flex items-center gap-2">
+                <Icon name="CreditCard" size={20} />
+                Способ оплаты
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setOrderForm({...orderForm, paymentMethod: 'card'})}
+                  className={`p-4 border-2 rounded-lg flex flex-col items-center gap-2 transition-all ${
+                    orderForm.paymentMethod === 'card' 
+                      ? 'border-primary bg-primary/5' 
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <Icon name="CreditCard" size={24} />
+                  <span className="font-medium">Карта</span>
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={() => setOrderForm({...orderForm, paymentMethod: 'sbp'})}
+                  className={`p-4 border-2 rounded-lg flex flex-col items-center gap-2 transition-all ${
+                    orderForm.paymentMethod === 'sbp' 
+                      ? 'border-primary bg-primary/5' 
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <Icon name="Smartphone" size={24} />
+                  <span className="font-medium">СБП</span>
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={() => setOrderForm({...orderForm, paymentMethod: 'wallet'})}
+                  className={`p-4 border-2 rounded-lg flex flex-col items-center gap-2 transition-all ${
+                    orderForm.paymentMethod === 'wallet' 
+                      ? 'border-primary bg-primary/5' 
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <Icon name="Wallet" size={24} />
+                  <span className="font-medium">Кошелёк</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setCheckoutDialogOpen(false)}>
+              Назад
+            </Button>
+            <Button 
+              onClick={() => {
+                if (!orderForm.name || !orderForm.email || !orderForm.phone) {
+                  toast.error('Заполните все обязательные поля');
+                  return;
+                }
+                const orderId = 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                toast.success(`Заказ ${orderId} оформлен! Билеты отправлены на ${orderForm.email}`);
+                setCheckoutDialogOpen(false);
+                setCart([]);
+                setOrderForm({ name: '', email: '', phone: '', paymentMethod: 'card' });
+              }}
+              className="gap-2"
+            >
+              <Icon name="Lock" size={18} />
+              Оплатить {getTotalPrice()} ₽
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={returnDialogOpen} onOpenChange={setReturnDialogOpen}>
         <DialogContent>
