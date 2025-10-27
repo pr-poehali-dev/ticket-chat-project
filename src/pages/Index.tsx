@@ -474,7 +474,7 @@ const Index = () => {
                   toast.error('Заполните все обязательные поля');
                   return;
                 }
-                const orderId = 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                const orderId = 'UZI-1921';
                 toast.success(`Заказ ${orderId} оформлен! Билеты отправлены на ${orderForm.email}`);
                 setCheckoutDialogOpen(false);
                 setCart([]);
