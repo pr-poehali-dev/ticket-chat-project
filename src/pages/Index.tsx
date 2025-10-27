@@ -472,13 +472,38 @@ const Index = () => {
               Назад
             </Button>
             <Button 
-              onClick={() => {
+              onClick={async () => {
                 if (!orderForm.name || !orderForm.email || !orderForm.phone) {
                   toast.error('Заполните все обязательные поля');
                   return;
                 }
+                
                 const orderId = 'UZI-1921';
-                toast.success(`Заказ ${orderId} оформлен! Билеты отправлены на ${orderForm.email}`);
+                
+                try {
+                  const response = await fetch('https://functions.poehali.dev/32dccee4-66b5-4db7-b968-d1e5b6bd3e95', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      email: orderForm.email,
+                      orderId: orderId,
+                      name: orderForm.name,
+                      tickets: cart,
+                      totalPrice: getTotalPrice()
+                    })
+                  });
+                  
+                  if (response.ok) {
+                    toast.success(`Заказ ${orderId} оформлен! Билеты отправлены на ${orderForm.email}`);
+                  } else {
+                    toast.success(`Заказ ${orderId} оформлен!`);
+                  }
+                } catch (error) {
+                  toast.success(`Заказ ${orderId} оформлен!`);
+                }
+                
                 setCheckoutDialogOpen(false);
                 setCart([]);
                 setOrderForm({ name: '', email: '', phone: '', paymentMethod: 'card' });

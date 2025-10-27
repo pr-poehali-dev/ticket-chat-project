@@ -1,0 +1,28 @@
+{
+  "tests": [
+    {
+      "name": "Send email with valid data",
+      "method": "POST",
+      "body": {
+        "email": "test@example.com",
+        "orderId": "UZI-1921",
+        "name": "Иван Иванов",
+        "tickets": [
+          {
+            "event": "Стендап: скрытый состав",
+            "date": "03 ноября 2025",
+            "venue": "Крокус Сити Холл",
+            "quantity": 2,
+            "price": 3000
+          }
+        ],
+        "totalPrice": 6000
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
